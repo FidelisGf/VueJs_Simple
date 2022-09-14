@@ -3,8 +3,11 @@
     <b-container >
         <div>
         <h1>Listagem de Empresas</h1>
-        <div class="row mt-5">
-            <div class="col-6">
+        <b-row class="row mt-5">
+            <b-col cols="4">
+                <router-link to="/"><b-button variant="outline-primary">Voltar</b-button></router-link> 
+            </b-col>
+            <b-col cols="4">
                 <b-button v-b-modal.modal-1>Inserir Usuario</b-button>
 
                 <b-modal id="modal-1" title="Adicionar Empresa">
@@ -22,11 +25,12 @@
                         </b-col>
                     </b-row>
                 </b-modal>
-            </div>
-            <div class="col-6">
-                <router-link to="/"><b-button variant="outline-primary">Voltar</b-button></router-link> 
-            </div>
-        </div>
+            </b-col>
+            <b-col cols="4">
+                <b-form-select v-model="selected" :options="options"></b-form-select>
+                {{selected}}
+            </b-col>
+        </b-row>
         
             <b-row>
                 <b-col>
@@ -72,7 +76,16 @@ export default {
             NOME:'',
             CNPJ:'',
             total : 10,
-            pageInfo : null
+            page : 1,
+            pageInfo : null,
+            selected: null,
+            options: [
+                { value: null, text: 'Filtros' },
+                { value: 'a', text: 'This is First option' },
+                { value: 'b', text: 'Selected Option' },
+                { value: { C: '3PO' }, text: 'This is an option with object value' },
+                { value: 'd', text: 'This one is disabled', disabled: true }
+            ]
         }
     },
     methods:{
@@ -88,11 +101,9 @@ export default {
             this.CNPJ = '';
         },
          async getEmpresas(page){
-           if(!this.page >= 1){
-                this.page = 1;
-           }
            this.total = this.page + 1
            const res =  await this.$http.get('/empresas?page=' + this.page + '&total=' + this.total);
+           console.log(res);
            this.listagem = res.data.data
            console.log(this.listagem);
         },
