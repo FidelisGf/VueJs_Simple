@@ -26,12 +26,18 @@
                     </b-row>
                 </b-modal>
             </b-col>
+          
             <b-col cols="4">
-                <b-form-select v-model="selected" :options="options"></b-form-select>
-                {{selected}}
+                <b-input-group>
+                    <b-form-select  v-model="selected" :options="options" class="select" ></b-form-select>
+                    <b-form-input v-model="search"></b-form-input>
+                    <b-input-group-append>
+                        <b-button @click="aplicarFiltro" text="Button" variant="success">Aplicar</b-button>
+                    </b-input-group-append>
+                </b-input-group>
             </b-col>
+         
         </b-row>
-        
             <b-row>
                 <b-col>
                     <table class="table mt-5 table-responsive-sm">
@@ -46,16 +52,22 @@
                         </thead>
                         <tbody>
                           <tr v-for="Empresa in listagem" :key="Empresa.ID">
-                            <th scope="row">{{Empresa.ID}}</th>
+                            <th scope="row">{{Empresa.ID_EMPRESA}}</th>
                             <td>{{Empresa.NOME}}</td>
                             <td>{{Empresa.CNPJ}}</td>
                             <td><b-button variant="outline-success">Editar</b-button></td>
                             <td><b-button variant="outline-danger">Excluir</b-button></td>
                           </tr>
-                          <b-button @click="previusPage" variant="outline-sucess">Pagina Anterior</b-button> 
-                          <b-button @click="nextPage" variant="outline-sucess">Proxima Pagina</b-button> 
+                         
                         </tbody>
                       </table>
+                     
+                </b-col>
+            </b-row>
+            <b-row align-v="center">
+                <b-col >
+                    <b-button @click="previusPage" variant="outline-danger" class="btn">Preview</b-button> 
+                    <b-button @click="nextPage" variant="outline-success">Next</b-button> 
                 </b-col>
             </b-row>
         </div>
@@ -71,25 +83,32 @@ export default {
     
     data(){
         return{
-           
             listagem:[],
             NOME:'',
             CNPJ:'',
+            rota: '/empresas?page=',
             total : 10,
             page : 1,
+            search: '',
             pageInfo : null,
             selected: null,
             options: [
-                { value: null, text: 'Filtros' },
-                { value: 'a', text: 'This is First option' },
-                { value: 'b', text: 'Selected Option' },
+                { value: '/empresas?page=', text: 'Sem Filtro'},
+                { value: 'ASC', text: 'Por nome' },
+                { value: 'b', text: 'Nao sei' },
                 { value: { C: '3PO' }, text: 'This is an option with object value' },
                 { value: 'd', text: 'This one is disabled', disabled: true }
             ]
         }
     },
     methods:{
-        adicionarListagem(){
+        aplicarFiltro(){
+            this.rota = this.selected
+            this.page = 1;
+            if(this.search  == null);{
+                return this.getEmpresas(this.page)
+            }
+            this.getEmpresas(this.page);
             
         },
         addEmpresa(){
@@ -102,12 +121,17 @@ export default {
         },
          async getEmpresas(page){
            this.total = this.page + 1
-           const res =  await this.$http.get('/empresas?page=' + this.page + '&total=' + this.total);
+           const res =  await this.$http.get(this.rota + this.page + '&total=' + this.total);
            console.log(res);
            this.listagem = res.data.data
            console.log(this.listagem);
         },
-
+        async getSearch(page){
+            this.total = this.page + 1
+            const res = await this.$http.post('/empresas/search?page=' + this.page + '&total=' + this.total, this.search);
+            console.log(res);
+            this.listagem = res.data.data;
+        },
         nextPage(){
             this.page += 1
             this.getEmpresas(this.page)
@@ -131,5 +155,15 @@ export default {
     .raise:focus {
         box-shadow: 0 0.5em 0.5em -0.4em var(--hover);
         transform: translateY(-0.25em);
+    }
+    .btn{
+        margin-left: 10px;
+    }
+    .select{
+        width: 25%;
+        font-size: 10px;
+    }
+    .input-btn{
+        width: 10%;
     }
 </style>
