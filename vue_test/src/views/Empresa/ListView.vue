@@ -2,13 +2,13 @@
 <template>
     <b-container >
         <div>
-        <h1>Listagem de Empresas</h1>
+        <h1 class="mt-4">Listagem de Empresas</h1>
         <b-row class="row mt-5">
             <b-col cols="4">
                 <router-link to="/"><b-button variant="outline-primary">Voltar</b-button></router-link> 
             </b-col>
             <b-col cols="4">
-                <b-button v-b-modal.modal-1>Inserir Usuario</b-button>
+                <b-button variant="outline-success" v-b-modal.modal-1>Inserir Usuario</b-button>
 
                 <b-modal id="modal-1" title="Adicionar Empresa">
                     <b-row>
@@ -30,9 +30,9 @@
             <b-col cols="4">
                 <b-input-group>
                     <b-form-select  v-model="selected" :options="options" class="select" ></b-form-select>
-                    <b-form-input v-model="search"></b-form-input>
+                    <b-form-input v-model="search" value="search"></b-form-input>
                     <b-input-group-append>
-                        <b-button @click="aplicarFiltro" text="Button" variant="success">Aplicar</b-button>
+                        <b-button @click="getSearch" text="Button" variant="success">Aplicar</b-button>
                     </b-input-group-append>
                 </b-input-group>
             </b-col>
@@ -47,7 +47,6 @@
                             <th scope="col">NOME</th>
                             <th scope="col">CNPJ</th>
                             <th scope="col">EDITAR</th>
-                            <th scope="col">EXCLUIR</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -55,8 +54,7 @@
                             <th scope="row">{{Empresa.ID_EMPRESA}}</th>
                             <td>{{Empresa.NOME}}</td>
                             <td>{{Empresa.CNPJ}}</td>
-                            <td><b-button variant="outline-success">Editar</b-button></td>
-                            <td><b-button variant="outline-danger">Excluir</b-button></td>
+                            <td><router-link :to="{name:'edit-empresa', params: {id: Empresa.ID_EMPRESA}}"><b-button variant="outline-success">Editar</b-button></router-link></td>
                           </tr>
                          
                         </tbody>
@@ -78,18 +76,22 @@
 
 
 
+
+
 /* eslint-disable */
 export default {
     
     data(){
         return{
+            show : false,
             listagem:[],
+            id : 0,
             NOME:'',
             CNPJ:'',
             rota: '/empresas?page=',
             total : 10,
             page : 1,
-            search: '',
+            search: null,
             pageInfo : null,
             selected: null,
             options: [
@@ -127,8 +129,9 @@ export default {
            console.log(this.listagem);
         },
         async getSearch(page){
+            console.log(this.search)
             this.total = this.page + 1
-            const res = await this.$http.post('/empresas/search?page=' + this.page + '&total=' + this.total, this.search);
+            const res = await this.$http.get('/searchEmp?page=' + this.page + '&total=' + this.total, { params: { search: this.search }});
             console.log(res);
             this.listagem = res.data.data;
         },
