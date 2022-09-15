@@ -13,6 +13,8 @@ Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 Vue.component('autocomplete',require('../src/components/AutoComplete.vue'))
+Vue.component('ListEmpresa',require('../src/components/ListEmpresa.vue'))
+export const EventBus = new Vue();
 Vue.config.productionTip = false
 
 new Vue({
