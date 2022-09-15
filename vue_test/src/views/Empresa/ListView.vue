@@ -4,7 +4,11 @@
         <div>
         <h1 class="mt-4">Listagem de Empresas</h1>
         <b-row class="row mt-5">
-            <b-col cols="3" >
+            <b-col cols="3">
+               <router-link to="/"><b-button variant="outline-primary" >Voltar</b-button></router-link> 
+            </b-col>
+            <b-col cols="5" >
+                
                 <b-button variant="outline-success" v-b-modal.modal-1>Inserir Usuario</b-button>
 
                 <b-modal id="modal-1" title="Adicionar Empresa">
@@ -24,12 +28,8 @@
                 </b-modal>
             </b-col>
           
-            <b-col cols="9">
-                <b-input-group>
-                    <b-form-select  v-model="selected" :options="options" class="select" ></b-form-select>
-                    <AutoComplete></AutoComplete>
-                </b-input-group>
-                    <b-button @click="getSearch" text="Button" variant="success">Aplicar</b-button>
+            <b-col cols="4">
+                <AutoComplete></AutoComplete>
             </b-col>
          
         </b-row>
