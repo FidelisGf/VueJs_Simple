@@ -4,10 +4,7 @@
         <div>
         <h1 class="mt-4">Listagem de Empresas</h1>
         <b-row class="row mt-5">
-            <b-col cols="4">
-                <router-link to="/"><b-button variant="outline-primary">Voltar</b-button></router-link> 
-            </b-col>
-            <b-col cols="4">
+            <b-col cols="3" >
                 <b-button variant="outline-success" v-b-modal.modal-1>Inserir Usuario</b-button>
 
                 <b-modal id="modal-1" title="Adicionar Empresa">
@@ -27,20 +24,18 @@
                 </b-modal>
             </b-col>
           
-            <b-col cols="4">
+            <b-col cols="9">
                 <b-input-group>
                     <b-form-select  v-model="selected" :options="options" class="select" ></b-form-select>
-                    <b-form-input v-model="search" value="search"></b-form-input>
-                    <b-input-group-append>
-                        <b-button @click="getSearch" text="Button" variant="success">Aplicar</b-button>
-                    </b-input-group-append>
+                    <AutoComplete></AutoComplete>
                 </b-input-group>
+                    <b-button @click="getSearch" text="Button" variant="success">Aplicar</b-button>
             </b-col>
          
         </b-row>
             <b-row>
-                <b-col>
-                    <table class="table mt-5 table-responsive-sm">
+                <b-col cols="12">
+                    <table class="table mt-5 table-responsive-lg">
                         <thead>
                           <tr>
                             <th scope="col">ID</th>
@@ -73,6 +68,7 @@
 </template>
 
 <script>
+import AutoComplete from '@/components/AutoComplete.vue';
 
 
 
@@ -80,77 +76,68 @@
 
 /* eslint-disable */
 export default {
-    
-    data(){
-        return{
-            show : false,
-            listagem:[],
-            id : 0,
-            NOME:'',
-            CNPJ:'',
-            rota: '/empresas?page=',
-            total : 10,
-            page : 1,
+    data() {
+        return {
+            show: false,
+            listagem: [],
+            id: 0,
+            NOME: "",
+            CNPJ: "",
+            rota: "/empresas?page=",
+            total: 10,
+            page: 1,
             search: null,
-            pageInfo : null,
+            pageInfo: null,
             selected: null,
+            last_page: null,
             options: [
-                { value: '/empresas?page=', text: 'Sem Filtro'},
-                { value: 'ASC', text: 'Por nome' },
-                { value: 'b', text: 'Nao sei' },
-                { value: { C: '3PO' }, text: 'This is an option with object value' },
-                { value: 'd', text: 'This one is disabled', disabled: true }
+                { value: "/empresas?page=", text: "Sem Filtro" },
+                { value: "BYNAME", text: "Por nome" },
+                { value: "b", text: "Nao sei" },
+                { value: { C: "3PO" }, text: "This is an option with object value" },
+                { value: "d", text: "This one is disabled", disabled: true }
             ]
-        }
+        };
     },
-    methods:{
-        aplicarFiltro(){
-            this.rota = this.selected
-            this.page = 1;
-            if(this.search  == null);{
-                return this.getEmpresas(this.page)
-            }
-            this.getEmpresas(this.page);
-            
-        },
-        addEmpresa(){
-            var data = {NOME:this.NOME,CNPJ:this.CNPJ}
-            this.$http.post('/empresas', data).then((response)=>{
+    methods: {
+        addEmpresa() {
+            var data = { NOME: this.NOME, CNPJ: this.CNPJ };
+            this.$http.post("/empresas", data).then((response) => {
                 console.log(response);
-            })
-            this.NOME = '';
-            this.CNPJ = '';
+            });
+            this.NOME = "";
+            this.CNPJ = "";
         },
-         async getEmpresas(page){
-           this.total = this.page + 1
-           const res =  await this.$http.get(this.rota + this.page + '&total=' + this.total);
-           console.log(res);
-           this.listagem = res.data.data
-           console.log(this.listagem);
-        },
-        async getSearch(page){
-            console.log(this.search)
-            this.total = this.page + 1
-            const res = await this.$http.get('/searchEmp?page=' + this.page + '&total=' + this.total, { params: { search: this.search }});
+        async getEmpresas(page) {
+            this.total = this.page + 1;
+            const res = await this.$http.get(this.rota + this.page + "&total=" + this.total, { params: { search: this.search, selected: this.selected } });
             console.log(res);
             this.listagem = res.data.data;
         },
-        nextPage(){
-            this.page += 1
-            this.getEmpresas(this.page)
+        async getSearch(page) {
+            this.total = this.page + 1;
+            const res = await this.$http.get("/searchEmp?page=" + this.page + "&total=" + this.total, { params: { search: this.search, selected: this.selected } });
+            console.log(res);
+            this.listagem = res.data.data;
         },
-        previusPage(){
-            this.page -= 1
-            this.getEmpresas(this.page)
+        nextPage() {
+            this.page += 1;
+            this.getSearch();
+        },
+        previusPage() {
+            this.page -= 1;
+            this.getSearch();
         }
     },
-    async created(){
-       this.getEmpresas();
-    }
+    async created() {
+        this.getSearch();
+    },
+    components: { AutoComplete }
 }
 </script>
 
 <style>
+    body { overflow-x: hidden; }
     .body-table{
         width: 100%;
     }
@@ -164,7 +151,7 @@ export default {
     }
     .select{
         width: 25%;
-        font-size: 10px;
+        font-size: 14px;
     }
     .input-btn{
         width: 10%;
