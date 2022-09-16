@@ -9,7 +9,7 @@
             </b-col>
             <b-col cols="4" >
                 
-                <b-button variant="outline-success" v-b-modal.modal-1>Inserir Usuario</b-button>
+                <b-button variant="outline-success" v-b-modal.modal-1>Inserir Empresa</b-button>
 
                 <b-modal id="modal-1" title="Adicionar Empresa">
                     <b-row>
@@ -36,7 +36,7 @@
                 <b-input type="text" placeholder="Digite a Empresa aqui" v-model="query" v-on:keyup="autoComplete" class="form-control w-100"> </b-input>
                 <div class="panel-footer" v-if="results.length">
                     <b-list-group >
-                        <b-list-group-item v-model="result" onclick="chooseAuto(empresa.NOME)" v-for="empresa in results" :key="empresa.ID_EMPRESA" class="result_auto" button>{{ empresa.NOME }}</b-list-group-item>
+                        <b-list-group-item v-model="result" @click="resulComplete(empresa.NOME)"  v-for="empresa in results" :key="empresa.ID_EMPRESA" class="result_auto w-50" button>{{ empresa.NOME }}</b-list-group-item>
                     </b-list-group>
                 </div>
             </b-col>  
@@ -77,7 +77,7 @@
 
 <script>
 import AutoComplete from '@/components/AutoComplete.vue';
-import { EventBus } from '@/main';
+
 
 
 
@@ -133,26 +133,33 @@ export default {
         async getSearch(page) {
             this.total = this.page + 1;
             const res = await this.$http.get("/searchEmp?page=" + this.page + "&total=" + this.total, { params: { search: this.query, selected: this.selected } });
-            this.listagem = res.data.data;
-            EventBus.$emit("getSearch", this.listagem);
+            if(res.data.data != undefined){
+                return this.listagem = res.data.data
+            }else{
+                this.listagem = res.data
+            }
+            console.log(this.listagem);
         },
         autoComplete(){
             this.results = [];
             if(this.query.length > 2){
                 this.$http.get('/autoCompleteEmpresa',{params: {search: this.query}}).then(response => {
-                this.results = response.data;
+                this.results = response.data
             });
             }
         },
-        chooseAuto(result){
-            this.query = this.result
-            console.log(this.result)
-
+        resulComplete(result){
+            this.query = result;
+            this.getSearch()
+            this.query = ''
+            this.result = ''
+            this.results = []
+        
         }
     },
     async created() {
        this.getSearch();
-    },
+    }, 
     components: { AutoComplete }
 }
 </script>
