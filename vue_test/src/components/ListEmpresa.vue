@@ -12,14 +12,23 @@
                 <b-button variant="outline-success" v-b-modal.modal-1>Inserir Empresa</b-button>
 
                 <b-modal id="modal-1" title="Adicionar Empresa">
-                    <b-row>
-                        <b-col>
-                            <b-input v-model="NOME" placeholder="Nome"></b-input>
-                        </b-col>
-                        <b-col>
+                    <b-form responsive-sm  @click.stop.prevent>
+                        <b-row>
+                            <b-col>
+                                <b-form-input v-model="NOME" :state="validationNome" id="feedback-nome"></b-form-input>
+                                    <b-form-invalid-feedback :state="validationNome">
+                                        A Empresa deve possuir entre 2 á 49 caracteres
+                                    </b-form-invalid-feedback>
+                                    <b-form-valid-feedback :state="validation">
+                                        Bom.
+                                    </b-form-valid-feedback>
+                            
+                            </b-col>
+                            <b-col>
                             <b-input v-model="CNPJ" placeholder="Cnpj"></b-input>
-                        </b-col>
-                    </b-row>
+                            </b-col>
+                        </b-row>
+                    </b-form>
                     <b-row class="mt-3">
                         <b-col class="text-center">
                             <b-button @click="addEmpresa" pill variant="outline-success" class="raise" >Adicionar</b-button>
@@ -160,6 +169,14 @@ export default {
     async created() {
        this.getSearch();
     }, 
+    computed: {
+      validationNome() {
+        return this.NOME.length >= 2  && this.NOME.length <= 49
+      },
+      validationCnpj(){
+        return this.CNPJ.length == 14
+      }
+    },
     components: { AutoComplete }
 }
 </script>
