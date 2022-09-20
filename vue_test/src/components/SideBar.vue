@@ -50,15 +50,13 @@ export default {
           const response = await this.$http.get('/auth/profile');
           console.log(response);
         },
-        async logOut(){
-          const response = await this.$http.post('/auth/logout');
-          console.log(response);
-        },
+        logOut(){
+          this.$router.push('/')
+        }
       },
       async created() {
         this.profile();
       },
-
     //   destroyed(){
     //     this.logOut();
     //   }

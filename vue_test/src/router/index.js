@@ -3,17 +3,19 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ListView from '../views/Empresa/ListView.vue'
+import axios, { Axios } from 'axios'
 Vue.use(VueRouter)
 
 const routes = [
+  
   {
-    path: '/',
+    path: '/home',
     name: 'home',
     component: HomeView
   },
 
   {
-    path: '/login',
+    path: '/',
     name: 'login',
     component: () => import(/* webpackChunkName: "about" */ '../views/LoginView.vue')
   },
@@ -41,8 +43,22 @@ const routes = [
   }
 ]
 
+
+
 const router = new VueRouter({
   routes
 })
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+    // If logged in, or going to the Login page.
+   
+    if (token || to.name === 'login') {
+      next()
+    } else {
+      // Not logged in, redirect to login.
+      next({name: 'login'})
+    }
+  }
+);
 
 export default router

@@ -1,16 +1,12 @@
-
 <template>
-    <b-container >
-        <div>
+    <div>
         <h1 class="mt-4">Listagem de Empresas</h1>
         <b-row class="row mt-5">
             <b-col cols="4">
                <router-link to="/"><b-button variant="outline-primary" >Voltar</b-button></router-link> 
             </b-col>
             <b-col cols="4" >
-                
                 <b-button variant="outline-success" v-b-modal.modal-1>Inserir Empresa</b-button>
-
                 <b-modal id="modal-1" title="Adicionar Empresa">
                     <b-form responsive-sm  @click.stop.prevent>
                         <b-row>
@@ -22,7 +18,6 @@
                                     <b-form-valid-feedback :state="validationNome">
                                         Nome válido.
                                     </b-form-valid-feedback>
-                            
                             </b-col>
                             <b-col>
                             <b-input v-model="CNPJ" placeholder="Cnpj"></b-input>
@@ -36,7 +31,6 @@
                     </b-row>
                 </b-modal>
             </b-col>
-          
             <b-col cols="4">
                 <b-input-group>
                     <b-form-select  v-model="selected" :options="options" class="select" ></b-form-select>
@@ -50,56 +44,24 @@
                 </div>
             </b-col>  
         </b-row>
-            <b-row>
-                <b-col cols="12">
-                    <table class="table mt-5 table-responsive-lg">
-                        <thead>
-                          <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">NOME</th>
-                            <th scope="col">CNPJ</th>
-                            <th scope="col">EDITAR</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr v-for="Empresa in listagem" :key="Empresa.ID">
-                            <th scope="row">{{Empresa.ID_EMPRESA}}</th>
-                            <td>{{Empresa.NOME}}</td>
-                            <td>{{Empresa.CNPJ}}</td>
-                            <td><router-link :to="{name:'edit-empresa', params: {id: Empresa.ID_EMPRESA}}"><b-button variant="outline-success">Editar</b-button></router-link></td>
-                          </tr>
-                         
-                        </tbody>
-                      </table>
-                     
-                </b-col>
-            </b-row>
-            <b-row align-v="center">
-                <b-col >
-                    <b-button @click="previusPage" variant="outline-danger" class="btn">Preview</b-button> 
-                    <b-button @click="nextPage" variant="outline-success">Next</b-button> 
-                </b-col>
-            </b-row>
-        </div>
-    </b-container>
+        <ListTemplate  :listagem="listagem" :columns="columns" :edit="edit" ></ListTemplate>
+        <b-row align-v="center">
+            <b-col >
+                <b-button @click="previusPage" variant="outline-danger" class="btn">Preview</b-button> 
+                <b-button @click="nextPage" variant="outline-success">Next</b-button> 
+            </b-col>
+        </b-row>
+    </div>
 </template>
 
 <script>
-import AutoComplete from '@/components/AutoComplete.vue';
-
-
-
-
-
-
+import ListTemplate from './ListTemplate.vue';
 /* eslint-disable */
 export default {
-    data() {
-        
-        return {
+    data(){
+        return{
             show: false,
             listagem: [],
-            id: 0,
             NOME: "",
             CNPJ: "",
             rota: "/empresas?page=",
@@ -119,19 +81,16 @@ export default {
                 { value: "b", text: "Nao sei" },
                 { value: { C: "3PO" }, text: "This is an option with object value" },
                 { value: "d", text: "This one is disabled", disabled: true }
-            ]
-          
-        };
+            ],
+            columns: [
+                { name: "ID", title: "ID"},
+                { name: "NOME", title: "NOME"},
+                { name: "CNPJ", title: "CNPJ"},
+            ],
+            edit : 'edit-empresa',
+        }
     },
-    methods: {
-        addEmpresa() {
-            var data = { NOME: this.NOME, CNPJ: this.CNPJ };
-            this.$http.post("/empresas", data).then((response) => {
-                console.log(response);
-            });
-            this.NOME = "";
-            this.CNPJ = "";
-        },
+    methods:{
         nextPage() {
             this.page += 1;
             this.getSearch();
@@ -150,6 +109,14 @@ export default {
             }
             console.log(this.listagem);
         },
+        addEmpresa() {
+            var data = { NOME: this.NOME, CNPJ: this.CNPJ };
+            this.$http.post("/empresas", data).then((response) => {
+                console.log(response);
+            });
+            this.NOME = "";
+            this.CNPJ = "";
+        },
         autoComplete(){
             this.results = [];
             if(this.query.length > 2){
@@ -167,9 +134,6 @@ export default {
         
         }
     },
-    async created() {
-       this.getSearch();
-    }, 
     computed: {
       validationNome() {
         return this.NOME.length >= 2  && this.NOME.length <= 49
@@ -178,51 +142,13 @@ export default {
         return this.CNPJ.length == 14
       }
     },
-    components: { AutoComplete }
+    async created(){
+        this.getSearch();
+    },  
+    components: { ListTemplate, ListTemplate }
 }
 </script>
 
-<style>
-    body { overflow-x: hidden; }
-    .body-table{
-        width: 100%;
-    }
-    .raise:hover,
-    .raise:focus {
-        box-shadow: 0 0.5em 0.5em -0.4em var(--hover);
-        transform: translateY(-0.25em);
-    }
-    .btn{
-        margin-left: 10px;
-    }
-    .select{
-        width: 25%;
-        font-size: 14px;
-    }
-    .input-btn{
-        width: 10%;
-    }
-    .result_auto{
-        padding: 0;
-        margin: 0;
-        border: 1px solid #eeeeee;
-        height: 40px;
-        font-size: 12px;
-        min-height: 1em;
-        max-height: 6em;    
-        overflow: auto;
-    }
-    .result_auto{
-        list-style: none;
-        text-align: left;
-        padding: 4px 2px;
-        cursor: pointer;
-    }
-    .result_auto{
-        background-color: #4AAE9B;
-        color: white;
-    }
-    .form-control {
-        position: relative;
-    }
+<style lang="scss" scoped>
+
 </style>

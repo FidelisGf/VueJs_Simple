@@ -1,19 +1,16 @@
 
 <template>
-    <ListEmpresa></ListEmpresa>
+    <b-container>
+        <FormEmpresa></FormEmpresa>
+    </b-container>    
 </template>
 
 <script>
-import AutoComplete from '@/components/AutoComplete.vue';
-import ListEmpresa from '@/components/ListEmpresa.vue';
-
-
-
-
+import FormEmpresa from "../../components/FormEmpresa.vue";
 
 /* eslint-disable */
 export default {
-    components: { AutoComplete, ListEmpresa }
+    components: {FormEmpresa }
 }
 </script>
 

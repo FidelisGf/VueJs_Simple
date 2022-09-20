@@ -55,11 +55,15 @@ export default {
           alert("Dados Invalidos");
         }
       },
-      
-      
-      
+      async logOut(){
+          const response = await this.$http.post('/auth/logout');
+          console.log(response);
+          localStorage.clear('token')
+      },
    },
-   
+   async created(){
+      this.logOut();
+    }
 }
 </script>
 
