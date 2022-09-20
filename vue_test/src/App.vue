@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+<<<<<<< HEAD
     <div>
       <b-row align-v="start" >
         <b-col align-self="start" cols="2">
@@ -35,15 +36,20 @@
        
       </b-sidebar>
     </div>
+=======
+    <SideBar></SideBar>
+>>>>>>> a2713cf0d9254882b05eb5940be0eec7b26cb525
     <router-view/>
+    
   </div>
 </template>
 <script>
+import SideBar from './components/SideBar.vue';
+
     export default{
-     
-    }
-
-
+    components: { SideBar }
+    
+}
 </script>
 <style>
 #app {

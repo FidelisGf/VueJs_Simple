@@ -7,11 +7,13 @@ import '@/plugins/axios'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-
+/* eslint-disable */
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
+
+export const EventBus = new Vue();
 Vue.config.productionTip = false
 
 new Vue({
