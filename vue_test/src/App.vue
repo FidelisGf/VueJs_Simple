@@ -2,7 +2,7 @@
   <div id="app">
     <div>
       <b-row align-v="start" >
-        <b-col align-self="start" cols="4">
+        <b-col align-self="start" cols="2">
           <b-button v-b-toggle.sidebar-1 variant="outline-success" class="mt-3">Menu</b-button>
         </b-col>
       </b-row>
