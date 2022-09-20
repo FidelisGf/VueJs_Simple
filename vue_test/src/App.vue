@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div>
+    <!-- <div>
       <b-row align-v="start" >
         <b-col align-self="start" cols="4">
           <b-button v-b-toggle.sidebar-1 variant="outline-success" class="mt-3">Menu</b-button>
@@ -34,7 +34,7 @@
         
        
       </b-sidebar>
-    </div>
+    </div> -->
     <router-view/>
   </div>
 </template>
