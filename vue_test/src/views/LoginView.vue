@@ -9,22 +9,19 @@
                   <h3 class="mb-5">Login</h3>
       
                   <div class="form-outline mb-4">
-                    <input type="email" id="typeEmailX-2" class="form-control form-control-lg" />
-                    <label class="form-label" for="typeEmailX-2">Email</label>
+                    <input type="email" v-model="name" id="typeEmailX-2" class="form-control form-control-lg" />
+                    <label class="form-label" for="typeEmailX-2">Usuario</label>
                   </div>
       
                   <div class="form-outline mb-4">
-                    <input type="password" id="typePasswordX-2" class="form-control form-control-lg" />
+                    <input type="password" v-model="password" id="typePasswordX-2" class="form-control form-control-lg" />
                     <label class="form-label" for="typePasswordX-2">Password</label>
                   </div>
       
                   <!-- Checkbox -->
                  
-                  <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
-      
+                  <button class="btn btn-primary btn-lg btn-block" @click="logar" type="submit">Login</button>
                   
-                 
-      
                 </div>
               </div>
             </div>
@@ -34,7 +31,34 @@
 </template>
 
 <script>
+
+
+
+
+
 export default {
+   data(){
+      return{
+        name: '',
+        password: '',
+        show_menu: true,
+      }
+   },
+   methods:{
+      async logar(){
+        const res = await this.$http.post("/auth/login", {NAME : this.name, PASSWORD: this.password});
+        console.log(res);
+        if(res.status == 200){
+          localStorage.setItem('token', res.data.access_token);
+          this.$router.push('list-empresa')
+        }else{
+          alert("Dados Invalidos");
+        }
+      },
+      
+      
+      
+   },
    
 }
 </script>

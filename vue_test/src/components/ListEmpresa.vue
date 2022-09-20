@@ -17,10 +17,10 @@
                             <b-col>
                                 <b-form-input v-model="NOME" :state="validationNome" id="feedback-nome"></b-form-input>
                                     <b-form-invalid-feedback :state="validationNome">
-                                        A Empresa deve possuir entre 2 á 49 caracteres
+                                        O nome deve possuir entre 2 a 49 caracteres
                                     </b-form-invalid-feedback>
-                                    <b-form-valid-feedback :state="validation">
-                                        Bom.
+                                    <b-form-valid-feedback :state="validationNome">
+                                        Nome válido.
                                     </b-form-valid-feedback>
                             
                             </b-col>
@@ -110,6 +110,7 @@ export default {
             selected: null,
             last_page: null,
             query: '',
+            user : '',
             results: [],
             result : '',
             options: [
